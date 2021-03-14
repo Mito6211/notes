@@ -1,53 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { Container, Flex, Text, Box, Button, Textarea } from "@chakra-ui/react";
 
 export default function App() {
-  const [formData, setFormData] = useState({
-    note: localStorage.getItem("note") || "",
-    allNotes: JSON.parse(localStorage.getItem("allNotes")) || [],
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const addNote = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      note: "",
-      allNotes: [...prevData.allNotes, formData.note],
-    }));
-    localStorage.setItem(
-      "allNotes",
-      JSON.stringify([...formData.allNotes, formData.note])
-    );
-  };
+  const [note, setNote] = useState(localStorage.getItem("note") || "");
+  const [allNotes, setAllNotes] = useState(
+    JSON.parse(localStorage.getItem("allNotes")) || []
+  );
 
   useEffect(() => {
-    localStorage.setItem("note", formData.note);
-  }, [formData.note]);
+    localStorage.setItem("note", note);
+    localStorage.setItem("allNotes", JSON.stringify(allNotes));
+  }, [note, allNotes]);
 
   return (
-    <div>
-      <div>
-        <textarea
-          placeholder="add a note here!"
+    <Container centerContent maxW="1000px">
+      <Flex direction="column">
+        <Textarea
+          placeholder="Add a note here!"
           name="note"
-          value={formData.note}
-          onChange={handleChange}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
         />
-        <button onClick={addNote}>Add Note</button>
-      </div>
-      <div>
-        {formData.allNotes.map((note) => (
-          <div>
-            <p>{note}</p>
-          </div>
+        <Button
+          onClick={() => {
+            setAllNotes((prev) => [...prev, note]);
+            setNote("");
+          }}
+        >
+          Add Note
+        </Button>
+      </Flex>
+      <Flex direction="column">
+        {allNotes.map((note) => (
+          <Box>
+            <Text>{note}</Text>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Flex>
+    </Container>
   );
 }
