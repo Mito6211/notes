@@ -25,7 +25,7 @@ export default function App() {
     <Container maxW="1000px">
       <Flex justify="center" align="center" my="20px">
         <Box p="2">
-          <Heading size="lg">My Notes</Heading>
+          <Heading size="lg">Notes Demo</Heading>
         </Box>
         <Spacer />
         <Button colorScheme="orange">View Notes</Button>
@@ -50,11 +50,16 @@ export default function App() {
         </Button>
       </Flex>
       <Flex direction="column">
-        {allNotes.map((note) => (
-          <Box>
+        {allNotes.map((note, idx) => (
+          <Box key={idx}>
             <Text>{note}</Text>
           </Box>
         ))}
+        {allNotes.length > 0 && (
+          <Button colorScheme="red" onClick={() => setAllNotes([])} my="10px">
+            Delete All Notes
+          </Button>
+        )}
       </Flex>
     </Container>
   );
