@@ -9,6 +9,7 @@ import {
   Heading,
   Spacer,
 } from "@chakra-ui/react";
+import { MdClose } from "react-icons/md";
 
 export default function App() {
   const [note, setNote] = useState(localStorage.getItem("note") || "");
@@ -51,9 +52,19 @@ export default function App() {
       </Flex>
       <Flex direction="column">
         {allNotes.map((note, idx) => (
-          <Box key={idx}>
+          <Flex my="5px" key={idx} align="center">
+            <Button
+              colorScheme="red"
+              variant="outline"
+              mr="20px"
+              onClick={() =>
+                setAllNotes((prev) => prev.filter((note) => prev[idx] !== note))
+              }
+            >
+              <MdClose />
+            </Button>
             <Text>{note}</Text>
-          </Box>
+          </Flex>
         ))}
         {allNotes.length > 0 && (
           <Button colorScheme="red" onClick={() => setAllNotes([])} my="10px">
