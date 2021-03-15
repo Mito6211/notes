@@ -21,20 +21,22 @@ import { MdClose } from "react-icons/md";
 export default function App() {
   const history = useHistory();
   const location = useLocation();
-  const [note, setNote] = useState(localStorage.getItem("note") || "");
+  const [note, setNote] = useState(
+    JSON.parse(localStorage.getItem("note")) || { text: "", date: null }
+  );
   const [allNotes, setAllNotes] = useState(
     JSON.parse(localStorage.getItem("allNotes")) || []
   );
 
   useEffect(() => {
-    localStorage.setItem("note", note);
+    localStorage.setItem("note", JSON.stringify(note));
     localStorage.setItem("allNotes", JSON.stringify(allNotes));
   }, [note, allNotes]);
 
   return (
     <Container maxW="1000px">
       <Flex justify="center" align="center" my="20px">
-        <Box p="2">
+        <Box>
           <Heading size="lg">Notes Demo</Heading>
         </Box>
         <Spacer />
@@ -54,13 +56,18 @@ export default function App() {
               minH="300px"
               placeholder="Add a note here!"
               name="note"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
+              value={note.text}
+              onChange={(e) =>
+                setNote((prev) => ({ ...prev, text: e.target.value }))
+              }
             />
             <Button
               onClick={() => {
-                setAllNotes((prev) => [...prev, note]);
-                setNote("");
+                setAllNotes((prev) => [
+                  ...prev,
+                  { text: note.text, date: new Date().getTime() },
+                ]);
+                setNote({ text: "", date: null });
               }}
               colorScheme="orange"
               my="10px"
@@ -83,7 +90,7 @@ export default function App() {
                 >
                   <MdClose />
                 </Button>
-                <Text>{note}</Text>
+                <Text>{note.text}</Text>
               </Flex>
             ))}
             {allNotes.length > 0 && (
@@ -103,13 +110,15 @@ export default function App() {
               <Tr>
                 <Th>Number</Th>
                 <Th>Note</Th>
+                <Th>Date</Th>
               </Tr>
             </Thead>
             <Tbody>
               {allNotes.map((note, idx) => (
                 <Tr key={idx}>
                   <Td>{idx + 1}</Td>
-                  <Td>{note}</Td>
+                  <Td>{note.text}</Td>
+                  <Td>{new Date(note.date).toLocaleTimeString()}</Td>
                 </Tr>
               ))}
             </Tbody>
