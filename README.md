@@ -1,6 +1,6 @@
 # Notes
 
-React app for storing/sharing important parts of documentation and useful insight.
+React app for storing/sharing notes that I tried to create as fast as possible.
 
 ### `yarn start`
 
